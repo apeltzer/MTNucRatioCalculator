@@ -97,10 +97,14 @@ public class MTtoNucCalculator {
         bfw.write("AVG Coverage on MT: " + mtcoverage + "\n");
         bfw.write("# of reads on nuclear chromosomes: " + nuclearreads + "\n");
         Double nuccoverage = nuclearreads*(Double.valueOf(lengthofnucreads / Double.valueOf(nuclearreads)))/referenceLength;
+        bfw.write("AVG Coverage on nuclear chromosomes: " + nuccoverage + "\n");
         DecimalFormat df = new DecimalFormat("##.##");
-        if(mitochondrialreads > 0){
+
+        if(mitochondrialreads > 0 && nuclearreads > 0 ){
             bfw.write("mt/nuc Ratio: " + df.format(Double.valueOf(mtcoverage) / Double.valueOf(nuccoverage)) + "\n");
-        } else {
+        } else if (mitochondrialreads > 0) {
+            bfw.write("mt/nuc Ratio: NF\n");
+        }  else {
             bfw.write("mt/nuc Ratio: " + 0.0 + "\n");
         }
         bfw.flush();
