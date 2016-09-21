@@ -14,9 +14,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import net.sf.samtools.SAMFileHeader;
-import net.sf.samtools.SAMFileReader;
-import net.sf.samtools.SAMRecord;
+import htsjdk.samtools.*;
+
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -29,7 +28,7 @@ import java.util.Iterator;
  * Created by alex on 01.11.14.
  */
 public class MTtoNucCalculator {
-    private final SAMFileReader inputSam;
+    private final SamReader inputSam;
     private FileWriter fw;
     private BufferedWriter bfw;
     private long referenceLength = 0;
@@ -42,8 +41,7 @@ public class MTtoNucCalculator {
 
 
     public MTtoNucCalculator(File f, String outputpath, String mtidentifier) throws IOException {
-        inputSam = new SAMFileReader(f);
-        inputSam.setValidationStringency(SAMFileReader.ValidationStringency.LENIENT);
+        inputSam = SamReaderFactory.make().enable(SamReaderFactory.Option.DONT_MEMORY_MAP_INDEX).validationStringency(ValidationStringency.LENIENT).open(f);
         referenceLength = inputSam.getFileHeader().getSequenceDictionary().getReferenceLength();
         this.mtidentifier = mtidentifier;
         mtlength = getMTLength(inputSam.getFileHeader().getTextHeader());

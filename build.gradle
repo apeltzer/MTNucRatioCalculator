@@ -1,0 +1,50 @@
+group 'com.uni-tuebingen.de.it.eager.mtnuccalculator'
+version '0.2'
+
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.1'
+    }
+}
+
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+    apply plugin: 'java'
+    apply plugin: 'com.jfrog.bintray'
+}
+
+sourceCompatibility = 1.8
+
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+}
+
+
+dependencies {
+  compile 'com.github.samtools:htsjdk:2.6.1'
+}
+
+
+jar {
+    manifest {
+        attributes("Implementation-Title": "MTNucRatioCalculator",
+                "Implementation-Version": version, "main-Class": "MTtoNucCalculator")
+    }
+    doFirst {
+        from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+}
