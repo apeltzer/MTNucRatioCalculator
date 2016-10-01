@@ -1,0 +1,21 @@
+# Contributor: Alex Peltzer <alex.peltzer@gmail.com>
+# Maintainer: Alex Peltzer <alex.peltzer@gmail.com>
+
+pkgname=eagerstat
+pkgver=0.2
+pkgrel=1
+pkgdesc="A few tools for the EAGER Pipeline that produce important statistical output for the pipeline."
+realnameMT="MTNucRatioCalculator-${pkgver}.jar"
+arch=('any')
+url="http://it.inf.uni-tuebingen.de/?page_id=161"
+license=('custom')
+depends=('java-environment')
+source=("$realnameMT" "starter.sh")
+md5sums=('SKIP' 'SKIP')
+package() {
+  mkdir -p "${pkgdir}/usr/bin"
+  install -D -m755 "${srcdir}/$realnameMT" "${pkgdir}/opt/$pkgname/$realnameMT"
+  install -D -m755 "${srcdir}/starter.sh" "${pkgdir}/opt/$pkgname/starter.sh"
+  install -D -m755 "${pkgdir}/opt/$pkgname/starter.sh" "${pkgdir}/usr/bin/mttonucratiocalculator"
+}
+
