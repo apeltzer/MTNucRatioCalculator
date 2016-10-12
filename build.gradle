@@ -72,9 +72,9 @@ bintray {
         licenses = ['GPL-3.0']
         vcsUrl = "https://github.com/apeltzer/MTNucRatioCalculator"
         version {
-            name = "0.2" 
+            name = project.version 
             desc = 'A small Java tool to calculate ratios between MT and nuclear sequencing reads in a given BAM file'
-            vcsTag = "0.2"
+            vcsTag = project.version
 	    released  = new Date()
             attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
         }
