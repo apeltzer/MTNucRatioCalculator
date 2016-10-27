@@ -1,5 +1,5 @@
 group 'com.uni-tuebingen.de.it.eager.mtnuccalculator'
-version '0.2'
+version '0.3'
 
 
 buildscript {
@@ -20,6 +20,7 @@ allprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'java'
     apply plugin: 'com.jfrog.bintray'
+    apply plugin: 'idea'
 }
 
 sourceCompatibility = 1.8

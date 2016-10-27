@@ -17,6 +17,7 @@
 import htsjdk.samtools.*;
 
 
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class MTtoNucCalculator {
     private int nuclearreads = 0;
     private int mitochondrialreads = 0;
     private int lengthofmtreads = 0;
-    private int lengthofnucreads = 0;
+    private double lengthofnucreads = 0;
     private String mtidentifier = "";
 
 
@@ -85,7 +86,7 @@ public class MTtoNucCalculator {
 
                 } else {
                     nuclearreads++;
-                    lengthofnucreads += curr.getReadLength();
+                    lengthofnucreads += curr.getReadLength(); //TODO this is a problematic thing...
                 }
             }
         }
