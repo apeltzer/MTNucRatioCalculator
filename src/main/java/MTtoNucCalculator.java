@@ -36,7 +36,7 @@ public class MTtoNucCalculator {
     private int mtlength = 0;
     private int nuclearreads = 0;
     private int mitochondrialreads = 0;
-    private int lengthofmtreads = 0;
+    private double lengthofmtreads = 0;
     private double lengthofnucreads = 0;
     private String mtidentifier = "";
 
@@ -46,7 +46,7 @@ public class MTtoNucCalculator {
         referenceLength = inputSam.getFileHeader().getSequenceDictionary().getReferenceLength();
         this.mtidentifier = mtidentifier;
         mtlength = getMTLength(inputSam.getFileHeader().getTextHeader());
-
+	
         fw = new FileWriter(new File(outputpath));
         bfw = new BufferedWriter(fw);
     }
