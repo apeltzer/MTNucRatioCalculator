@@ -1,0 +1,16 @@
+language: java
+sudo: false
+jdk:
+- oraclejdk8
+script: gradle build
+env:
+- version=0.5
+deploy:
+  provider: releases
+  api_key:
+    secure: v/TXkFC9twkX1mrFoLBM7dZieH4p3Be7cqw16ncqm2DuQ0O1wyt/RqzwPUgRdsxeBpLNBsJ3NI1d8Z4GfJyEXcO/8+DlgRCiI5x+Oeoz2qCShb8veHPb8ZGi8ynnffhZZKfzPCgL4y1+9gnx3iM6czz0bkTQ4QbKfk+ZgYglKAE/YU75ioYAHhMU92ciHXPhWaItKa3sh5GTBCzZcGeX+FfSa3sYBEY04vg9f4e+Q+Ts3BpR9S/799n/f8srzKw+gMdcZqDpFYX/pE2gjWbIH7NgFEZCKLvCF1o3Vul+PXuxcgrzhrTo7z5X0LrOaIjx92ALM/s3oEbylFQB1ZwmQMzIzcphrPW1FE2/Bav7h50cpW2n7akuxntqcmaX7H5DvTZWYhsdJt29Oi77MMhvj/72lg1zUuRGArjyR15vI6fuDQNEtbFU/y79PWzvOQaqkwvRueym2v+37pXglJbyeReLraAK+uCmU1MelKcfLdpAGc3w/HmNWkdPs4gn8g78ZHHir6eW4oJk1byTvsUuFMtbviA5IIAH4HunjeDGiuY7pe9UeCxKOdxv11lVIxIHcTqvhgnw/nUgdM+gfcIFHOyNd4XJ7ZiNkBTcc6L3k4NJeN4IX2UZ0UMx/43CX/YZrE32+6DyzIwCORP78CRoomaln8fb+8Zg6DCjEV9WgRk=
+  file: build/libs/MTNucRatioCalculator-0.5.jar
+  skip_cleanup: true
+  on:
+    all_branches: true
+    repo: apeltzer/MTNucRatioCalculator

@@ -15,15 +15,16 @@
  */
 
 import htsjdk.samtools.*;
-
-
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.Iterator;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Created by alex on 01.11.14.
@@ -31,6 +32,7 @@ import java.util.Iterator;
 public class MTtoNucCalculator {
     private final SamReader inputSam;
     private FileWriter fw;
+    private FileWriter jsonfw;
     private BufferedWriter bfw;
     private long referenceLength = 0;
     private int mtlength = 0;
@@ -39,6 +41,8 @@ public class MTtoNucCalculator {
     private double lengthofmtreads = 0;
     private double lengthofnucreads = 0;
     private String mtidentifier = "";
+    private HashMap<String, Object> json_map = new HashMap<>();
+    private static final String VERSION = "0.5";
 
 
     public MTtoNucCalculator(File f, String outputpath, String mtidentifier) throws IOException {
@@ -48,6 +52,7 @@ public class MTtoNucCalculator {
         mtlength = getMTLength(inputSam.getFileHeader().getTextHeader());
 	
         fw = new FileWriter(new File(outputpath));
+        jsonfw = new FileWriter(new File(outputpath+"mtnuc.json"));
         bfw = new BufferedWriter(fw);
     }
 
@@ -55,7 +60,7 @@ public class MTtoNucCalculator {
     public static void main(String[] args) throws IOException {
         if (args.length != 3) {
             System.err.println("Please provide the (coordinate) sorted input SAM File and the output path, as well as the MT identifier. No further parameters" +
-                    "are necessary! \n");
+                    " are necessary! \n");
             System.err.println("Make sure that your input file has an appropriate SAM/BAM file header, or the SAMRecords will be set to '*'! \n");
             System.exit(1);
         } else {
@@ -63,7 +68,7 @@ public class MTtoNucCalculator {
             String outputpath = f.getAbsolutePath() + ".mtnucratio";
 
             MTtoNucCalculator mTtoNucCalculator = new MTtoNucCalculator(f, outputpath, args[2]);
-            mTtoNucCalculator.readSAMFile();
+            mTtoNucCalculator.readSAMFile(f.getAbsolutePath());
         }
     }
 
@@ -74,7 +79,7 @@ public class MTtoNucCalculator {
      *
      * @throws java.io.IOException
      */
-    private void readSAMFile() throws IOException {
+    private void readSAMFile(String filename) throws IOException {
         Iterator it = inputSam.iterator();
         while (it.hasNext()) {
             SAMRecord curr = (SAMRecord) it.next();
@@ -91,21 +96,34 @@ public class MTtoNucCalculator {
             }
         }
         //Write our values now into output file
+        HashMap<String, Object> metrics_map = new HashMap<String, Object>();
         bfw.write("# of reads on mitochondrium: " + mitochondrialreads + "\n");
+        metrics_map.put("mtreads", mitochondrialreads);
         Double mtcoverage = mitochondrialreads * (Double.valueOf(lengthofmtreads) / Double.valueOf(mitochondrialreads))/mtlength;
         bfw.write("AVG Coverage on MT: " + mtcoverage + "\n");
+        metrics_map.put("mt_cov_avg", mtcoverage);
         bfw.write("# of reads on nuclear chromosomes: " + nuclearreads + "\n");
+        metrics_map.put("nucreads", nuclearreads);
         Double nuccoverage = nuclearreads*(Double.valueOf(lengthofnucreads / Double.valueOf(nuclearreads)))/referenceLength;
         bfw.write("AVG Coverage on nuclear chromosomes: " + nuccoverage + "\n");
+        metrics_map.put("nuc_cov_avg", nuccoverage);
         DecimalFormat df = new DecimalFormat("##.##");
 
         if(mitochondrialreads > 0 && nuclearreads > 0 ){
-            bfw.write("mt/nuc Ratio: " + df.format(Double.valueOf(mtcoverage) / Double.valueOf(nuccoverage)) + "\n");
+            String ratio = df.format(Double.valueOf(mtcoverage) / Double.valueOf(nuccoverage));
+            bfw.write("mt/nuc Ratio: " + ratio + "\n");
+            metrics_map.put("mt_nuc_ratio", ratio);
         } else if (mitochondrialreads > 0) {
             bfw.write("mt/nuc Ratio: NF\n");
+            metrics_map.put("mt_nuc_ratio", "NF");
         }  else {
             bfw.write("mt/nuc Ratio: " + 0.0 + "\n");
+            metrics_map.put("mt_nuc_ratio", 0.0);
         }
+
+        json_map.put("metrics", metrics_map);
+
+        writeJSON(filename);
         bfw.flush();
         bfw.close();
     }
@@ -127,4 +145,39 @@ public class MTtoNucCalculator {
         }
         return -1;
     }
+
+
+    /**
+     * writes all generated output statistics to YAML output file
+     * YAML has several key,value pairs (HashMaps) that all contain information created in DamageProfiler
+     * sample_name = the name of the sample
+     *
+     *
+     * @throws IOException
+     */
+    public void writeJSON(String input) throws IOException {
+        //Add Sample Name to yaml
+        String sampleName = input.split("/")[input.split("/").length-1];
+
+
+        //Add Metadata to JSON output
+        HashMap<String, Object> meta_map = new HashMap<>();
+
+        meta_map.put("sample_name",sampleName);
+        meta_map.put("tool_name", "mtnuccalculator");
+        meta_map.put("version", VERSION);
+
+        json_map.put("metadata", meta_map);
+
+        //Now add the stuff we need to have too
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().serializeSpecialFloatingPointValues().create();
+        String json = gson.toJson(json_map);
+
+        jsonfw.write(json);
+        jsonfw.flush();
+        jsonfw.close();
+
+    }
+
 }

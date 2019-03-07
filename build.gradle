@@ -1,5 +1,5 @@
 group 'com.uni-tuebingen.de.it.eager.mtnuccalculator'
-version '0.4'
+version '0.5'
 
 
 buildscript {
@@ -8,6 +8,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
+
     }
 }
 
@@ -36,7 +37,9 @@ sourceSets {
 
 
 dependencies {
-  compile 'com.github.samtools:htsjdk:2.6.1'
+  compile 'com.github.samtools:htsjdk:2.+'
+  compile 'com.google.code.gson:gson:2.8.5'
+
 }
 
 
