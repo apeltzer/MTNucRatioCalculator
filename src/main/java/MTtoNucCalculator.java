@@ -42,7 +42,7 @@ public class MTtoNucCalculator {
     private double lengthofnucreads = 0;
     private String mtidentifier = "";
     private HashMap<String, Object> json_map = new HashMap<>();
-    private static final String VERSION = "0.5";
+    private static final String VERSION = "0.6";
 
 
     public MTtoNucCalculator(File f, String outputpath, String mtidentifier) throws IOException {
@@ -58,8 +58,9 @@ public class MTtoNucCalculator {
 
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 3) {
-            System.err.println("Please provide the (coordinate) sorted input SAM File and the output path, as well as the MT identifier. No further parameters" +
+        if (args.length != 2) {
+	    System.err.println("Version: " + VERSION);
+            System.err.println("Please provide the (coordinate) sorted input SAM File, as well as the MT identifier. No further parameters" +
                     " are necessary! \n");
             System.err.println("Make sure that your input file has an appropriate SAM/BAM file header, or the SAMRecords will be set to '*'! \n");
             System.exit(1);
