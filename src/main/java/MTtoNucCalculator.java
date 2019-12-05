@@ -42,7 +42,7 @@ public class MTtoNucCalculator {
     private double lengthofnucreads = 0;
     private String mtidentifier = "";
     private HashMap<String, Object> json_map = new HashMap<>();
-    private static final String VERSION = "0.6";
+    private static final String VERSION = "0.7";
 
 
     public MTtoNucCalculator(File f, String outputpath, String mtidentifier) throws IOException {
@@ -68,7 +68,7 @@ public class MTtoNucCalculator {
             File f = new File(args[0]);
             String outputpath = f.getAbsolutePath() + ".mtnucratio";
 
-            MTtoNucCalculator mTtoNucCalculator = new MTtoNucCalculator(f, outputpath, args[2]);
+            MTtoNucCalculator mTtoNucCalculator = new MTtoNucCalculator(f, outputpath, args[1]);
             mTtoNucCalculator.readSAMFile(f.getAbsolutePath());
         }
     }
