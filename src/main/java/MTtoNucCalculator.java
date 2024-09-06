@@ -59,7 +59,7 @@ public class MTtoNucCalculator {
 
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
-	    System.err.println("Version: " + VERSION);
+            System.err.println("Version: " + VERSION);
             System.err.println("Please provide the (coordinate) sorted input SAM File, as well as the MT identifier. No further parameters" +
                     " are necessary! \n");
             System.err.println("Make sure that your input file has an appropriate SAM/BAM file header, or the SAMRecords will be set to '*'! \n");
@@ -178,7 +178,6 @@ public class MTtoNucCalculator {
         jsonfw.write(json);
         jsonfw.flush();
         jsonfw.close();
-
     }
 
 }
