@@ -4,11 +4,8 @@ version '0.7'
 
 buildscript {
     repositories {
-        jcenter()
     }
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
-
     }
 }
 
@@ -17,11 +14,9 @@ allprojects {
     repositories {
         jcenter()
     }
-    apply plugin: 'maven'
-    apply plugin: 'maven-publish'
     apply plugin: 'java'
-    apply plugin: 'com.jfrog.bintray'
     apply plugin: 'idea'
+	apply plugin: 'maven-publish'
 }
 
 sourceCompatibility = 1.8
@@ -37,9 +32,12 @@ sourceSets {
 
 
 dependencies {
-  compile 'com.github.samtools:htsjdk:2.+'
-  compile 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.github.samtools:htsjdk:2.19.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
+}
 
+
+java {
 }
 
 
@@ -48,8 +46,9 @@ jar {
         attributes("Implementation-Title": "MTNucRatioCalculator",
                 "Implementation-Version": version, "main-Class": "MTtoNucCalculator")
     }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     doFirst {
-        from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
+        from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     }
 }
 
@@ -60,28 +59,5 @@ publishing {
             groupId 'com.uni-tuebingen.de.it.eager'
             artifactId 'MTNucRatioCalculator'
         }
-    }
-}
-
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_API_KEY')
-    publications = ['MyPublication']
-    publish = true
-    override = true
-    pkg {
-        repo = 'EAGER'
-        name = 'MTNucRatioCalculator'
-        licenses = ['GPL-3.0']
-        vcsUrl = "https://github.com/apeltzer/MTNucRatioCalculator"
-        version {
-            name = project.version 
-            desc = 'A small Java tool to calculate ratios between MT and nuclear sequencing reads in a given BAM file'
-            vcsTag = project.version
-	    released  = new Date()
-            attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
-        }
-
     }
 }
