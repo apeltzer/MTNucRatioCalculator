@@ -42,7 +42,7 @@ public class MTtoNucCalculator {
     private double lengthofnucreads = 0;
     private String mtidentifier = "";
     private HashMap<String, Object> json_map = new HashMap<>();
-    private static final String VERSION = "0.7";
+    private static final String VERSION = "0.7.1";
 
 
     public MTtoNucCalculator(File f, String outputpath, String mtidentifier) throws IOException {
